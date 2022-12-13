@@ -4,19 +4,15 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.android.mdl.appreader.util.logDebug
 import com.google.android.material.elevation.SurfaceColors
 
 class MainActivity : AppCompatActivity() {
-
-    companion object {
-        private const val LOG_TAG = "MainActivity"
-    }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var mAdapter: NfcAdapter? = null
@@ -62,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Log.d(LOG_TAG, "New intent on Activity $intent")
+        logDebug("New intent on Activity $intent")
     }
 
     override fun onSupportNavigateUp(): Boolean {

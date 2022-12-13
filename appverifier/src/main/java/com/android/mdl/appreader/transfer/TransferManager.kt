@@ -5,22 +5,25 @@ import android.app.Activity
 import android.content.Context
 import android.nfc.NfcAdapter
 import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.preference.PreferenceManager
 import com.android.identity.ConnectionMethod
 import com.android.identity.ConnectionMethodHttp
 import com.android.identity.DataTransportOptions
 import com.android.identity.VerificationHelper
 import com.android.identity.DeviceRequestGenerator
 import com.android.identity.DeviceResponseParser
+import com.android.mdl.appreader.R
 import com.android.mdl.appreader.document.RequestDocumentList
 import com.android.mdl.appreader.readercertgen.ReaderCertificateGenerator
 import com.android.mdl.appreader.readercertgen.SupportedCurves.*
+import com.android.mdl.appreader.settings.UserPreferences
 import com.android.mdl.appreader.util.KeysAndCertificates
-import com.android.mdl.appreader.util.PreferencesHelper
 import com.android.mdl.appreader.util.TransferStatus
+import com.android.mdl.appreader.util.logDebug
+import com.android.mdl.appreader.util.logError
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.KeyFactory
 import java.security.PrivateKey
@@ -30,12 +33,9 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.util.*
 import java.util.concurrent.Executor
 
-
 class TransferManager private constructor(private val context: Context) {
 
     companion object {
-        private const val LOG_TAG = "TransferManager"
-
         @SuppressLint("StaticFieldLeak")
         @Volatile
         private var instance: TransferManager? = null
@@ -60,6 +60,9 @@ class TransferManager private constructor(private val context: Context) {
 
     private var transferStatusLd = MutableLiveData<TransferStatus>()
 
+    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val userPreferences = UserPreferences(sharedPreferences)
+
     fun getTransferStatus(): LiveData<TransferStatus> = transferStatusLd
 
     fun initVerificationHelper() {
@@ -67,8 +70,8 @@ class TransferManager private constructor(private val context: Context) {
             responseListener,
             context.mainExecutor())
         val options = DataTransportOptions.Builder()
-            .setBleUseL2CAP(PreferencesHelper.isBleL2capEnabled(context))
-            .setBleClearCache(PreferencesHelper.isBleClearCacheEnabled(context))
+            .setBleUseL2CAP(userPreferences.isBleL2capEnabled())
+            .setBleClearCache(userPreferences.isBleClearCacheEnabled())
             .build()
         builder.setDataTransportOptions(options)
         verification = builder.build()
@@ -80,8 +83,8 @@ class TransferManager private constructor(private val context: Context) {
             responseListener,
             context.mainExecutor())
         val options = DataTransportOptions.Builder()
-            .setBleUseL2CAP(PreferencesHelper.isBleL2capEnabled(context))
-            .setBleClearCache(PreferencesHelper.isBleClearCacheEnabled(context))
+            .setBleUseL2CAP(userPreferences.isBleL2capEnabled())
+            .setBleClearCache(userPreferences.isBleClearCacheEnabled())
             .build()
         builder.setDataTransportOptions(options)
         val methods = ArrayList<ConnectionMethod>()
@@ -89,7 +92,7 @@ class TransferManager private constructor(private val context: Context) {
         // and the dynamically allocated TCP port as port. So the resulting ConnectionMethodHttp
         // which will be included in ReaderEngagement CBOR will contain an URI of the
         // form http://192.168.1.2:18013/mdocreader
-        methods.add(ConnectionMethodHttp(""));
+        methods.add(ConnectionMethodHttp(""))
         builder.setUseReverseEngagement(methods)
         verification = builder.build()
         usingReverseEngagement = true
@@ -149,7 +152,7 @@ class TransferManager private constructor(private val context: Context) {
                 verification?.setUseTransportSpecificSessionTermination(true)
             }
         } catch (e: IllegalStateException) {
-            Log.e(LOG_TAG, "Error ignored.", e)
+            logError("Error ignored.", e)
         }
         disconnect()
     }
@@ -158,7 +161,7 @@ class TransferManager private constructor(private val context: Context) {
         try {
             verification?.disconnect()
         } catch (e: RuntimeException) {
-            Log.e(LOG_TAG, "Error ignored.", e)
+            logError("Error ignored.", e)
         }
         transferStatusLd = MutableLiveData<TransferStatus>()
         destroy()
@@ -202,7 +205,7 @@ class TransferManager private constructor(private val context: Context) {
         }
 
         override fun onError(error: Throwable) {
-            Log.e(LOG_TAG, "onError: ${error.message}")
+            logError("onError: ${error.message}")
             transferStatusLd.value = TransferStatus.ERROR
         }
     }
@@ -230,15 +233,16 @@ class TransferManager private constructor(private val context: Context) {
 //                val readerCA = IssuerKeys.getGoogleReaderCA(context)
 //                val readerCertificate =
 //                    ReaderCertificateGenerator.createReaderCertificate(keyPair, readerCA, getReaderCAPrivateKey())
-//                Log.d(LOG_TAG, "${curve.name} - $readerCertificate")
+//                logDebug("${curve.name} - $readerCertificate")
 //                //readerKeyCertificateChain = listOf(readerCertificate)
 //            }
 
             val provider = BouncyCastleProvider()
-
-            Log.d(LOG_TAG, "Curve used: ${PreferencesHelper.getReaderAuth(context)}")
+            val authValues = context.resources.getStringArray(R.array.readerAuthenticationValues)
+            val curveName = authValues[userPreferences.getReaderAuthentication()]
+            logDebug("Curve used: $curveName")
             // Check in preferences if reader authentication should be used
-            when (val curveName = PreferencesHelper.getReaderAuth(context)) {
+            when (curveName) {
                 SECP256R1.name, BRAINPOOLP256R1.name -> {
                     val keyPair = ReaderCertificateGenerator.generateECDSAKeyPair(curveName)
 
