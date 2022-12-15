@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    android:label="Reverse Engagement"
-    app:startDestination="@id/RequestOptions">
+    app:startDestination="@id/requestOptions">
 
     <fragment
-        android:id="@+id/RequestOptions"
+        android:id="@+id/requestOptions"
         android:name="com.android.mdl.appreader.fragment.RequestOptionsFragment"
         android:label="Mdoc Verifier"
         tools:layout="@layout/fragment_request_options">
@@ -24,20 +23,14 @@
         <action
             android:id="@+id/action_RequestOptions_to_Transfer"
             app:destination="@id/Transfer" />
-        <action
-            android:id="@+id/action_RequestOptions_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-        <action
-            android:id="@+id/action_RequestOptions_to_ShowQr"
-            app:destination="@id/ShowQr" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
+        android:id="@+id/settings"
         android:name="com.android.mdl.appreader.settings.SettingsFragment"
         android:label="Settings">
         <action
             android:id="@+id/action_settingsFragment_to_RequestOptions"
-            app:destination="@id/RequestOptions" />
+            app:destination="@id/requestOptions" />
     </fragment>
     <fragment
         android:id="@+id/RequestCustom"
@@ -61,7 +54,7 @@
             app:destination="@id/ScanDeviceEngagement" />
         <action
             android:id="@+id/action_RequestCustom_to_RequestOptions"
-            app:destination="@id/RequestOptions" />
+            app:destination="@id/requestOptions" />
     </fragment>
     <fragment
         android:id="@+id/ScanDeviceEngagement"
@@ -74,7 +67,7 @@
             app:nullable="false" />
         <action
             android:id="@+id/action_ScanDeviceEngagement_to_RequestOptions"
-            app:destination="@id/RequestOptions" />
+            app:destination="@id/requestOptions" />
         <action
             android:id="@+id/action_ScanDeviceEngagement_to_SelectTransport"
             app:destination="@id/SelectTransport" />
@@ -96,7 +89,7 @@
             app:destination="@id/Transfer" />
         <action
             android:id="@+id/action_SelectTransport_to_RequestOptions"
-            app:destination="@id/RequestOptions" />
+            app:destination="@id/requestOptions" />
     </fragment>
     <fragment
         android:id="@+id/Transfer"
@@ -116,7 +109,7 @@
             app:destination="@id/ShowDocument" />
         <action
             android:id="@+id/action_Transfer_to_RequestOptions"
-            app:destination="@id/RequestOptions" />
+            app:destination="@id/requestOptions" />
     </fragment>
     <fragment
         android:id="@+id/ShowDocument"
@@ -125,10 +118,10 @@
         tools:layout="@layout/fragment_show_document">
         <action
             android:id="@+id/action_ShowDocument_to_RequestOptions"
-            app:destination="@id/RequestOptions" />
+            app:destination="@id/requestOptions" />
     </fragment>
     <fragment
-        android:id="@+id/ShowQr"
+        android:id="@+id/reverseEngagement"
         android:name="com.android.mdl.appreader.fragment.ShowQrFragment"
         android:label="Reverse Engagement"
         tools:layout="@layout/fragment_show_qr">
@@ -138,7 +131,7 @@
             app:nullable="false" />
         <action
             android:id="@+id/action_ShowQr_to_RequestOptions"
-            app:destination="@id/RequestOptions" />
+            app:destination="@id/requestOptions" />
         <action
             android:id="@+id/action_ShowQr_to_Transfer"
             app:destination="@id/Transfer" />

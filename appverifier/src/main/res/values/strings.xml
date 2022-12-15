@@ -91,4 +91,9 @@
     <string name="age_over_65">Age over 65?</string>
     <string name="age_over_68">Age pver 68?</string>
 
+    <!-- Side Menu Items -->
+    <string name="menu_reader_home">Home</string>
+    <string name="menu_reverse_engagement">Reverse Engagement</string>
+    <string name="menu_settings">Settings</string>
+
 </resources>

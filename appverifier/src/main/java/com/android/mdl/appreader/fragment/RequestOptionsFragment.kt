@@ -5,7 +5,6 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.android.mdl.appreader.R
 import com.android.mdl.appreader.databinding.FragmentRequestOptionsBinding
 import com.android.mdl.appreader.document.*
 import com.android.mdl.appreader.transfer.TransferManager
@@ -33,8 +32,6 @@ class RequestOptionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setHasOptionsMenu(true)
-
         _binding = FragmentRequestOptionsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -103,12 +100,6 @@ class RequestOptionsFragment : Fragment() {
             binding.cbRequestMdlFull.isChecked = false
             binding.cbRequestMdlUsTransportation.isChecked = false
             binding.cbRequestMdlCustom.isChecked = true
-        }
-
-        binding.btShowQr.setOnClickListener {
-            findNavController().navigate(
-                RequestOptionsFragmentDirections.actionRequestOptionsToShowQr(calcRequestDocumentList())
-            )
         }
 
         binding.btNext.setOnClickListener {
@@ -191,22 +182,6 @@ class RequestOptionsFragment : Fragment() {
             requestDocumentList.addRequestDocument(doc2)
         }
         return requestDocumentList
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.main_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.item_settings -> {
-                findNavController().navigate(R.id.action_RequestOptions_to_settingsFragment)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun getSelectRequestMdlMandatory(intentToRetain: Boolean): Map<String, Boolean> {
