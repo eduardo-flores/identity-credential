@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/requestOptions"
         android:name="com.android.mdl.appreader.fragment.RequestOptionsFragment"
-        android:label="Mdoc Verifier"
-        tools:layout="@layout/fragment_request_options">
+        android:label="Mdoc Verifier">
         <argument
             android:name="keepConnection"
             android:defaultValue="false"
@@ -30,11 +29,7 @@
     <fragment
         android:id="@+id/settings"
         android:name="com.android.mdl.appreader.settings.SettingsFragment"
-        android:label="Settings">
-        <action
-            android:id="@+id/action_settingsFragment_to_RequestOptions"
-            app:destination="@id/requestOptions" />
-    </fragment>
+        android:label="Settings" />
     <fragment
         android:id="@+id/requestCustom"
         android:name="com.android.mdl.appreader.fragment.RequestCustomFragment"
@@ -109,19 +104,21 @@
             app:argType="boolean" />
         <action
             android:id="@+id/action_Transfer_to_ShowDocument"
-            app:destination="@id/ShowDocument" />
+            app:destination="@id/showDocument" />
         <action
             android:id="@+id/action_Transfer_to_RequestOptions"
             app:destination="@id/requestOptions" />
     </fragment>
     <fragment
-        android:id="@+id/ShowDocument"
+        android:id="@+id/showDocument"
         android:name="com.android.mdl.appreader.fragment.ShowDocumentFragment"
-        android:label="Show Document"
-        tools:layout="@layout/fragment_show_document">
+        android:label="Show Document">
         <action
-            android:id="@+id/action_ShowDocument_to_RequestOptions"
+            android:id="@+id/toRequestOptions"
             app:destination="@id/requestOptions" />
+        <action
+            android:id="@+id/newTransferRequest"
+            app:destination="@id/transfer"/>
     </fragment>
     <fragment
         android:id="@+id/reverseEngagement"
