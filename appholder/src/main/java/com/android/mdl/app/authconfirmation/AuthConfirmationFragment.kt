@@ -82,13 +82,9 @@ class AuthConfirmationFragment : BottomSheetDialogFragment() {
     }
 
     private fun stringValueFor(namespace: String, element: String): String {
-        val requested = if (element == "portrait") portraitFor(namespace) else element
+        val requested = "${namespace}_$element"
         val identifier = resources.getIdentifier(requested, "string", requireContext().packageName)
         return if (identifier != 0) getString(identifier) else element
-    }
-
-    private fun portraitFor(namespace: String): String {
-        return if (namespace == DocumentData.EU_PID_NAMESPACE) "facial_portrait" else "portrait"
     }
 
     private fun sendResponse() {

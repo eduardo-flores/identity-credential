@@ -11,16 +11,4 @@ object DocumentData {
     const val AAMVA_NAMESPACE = "org.iso.18013.5.1.aamva"
     const val EU_PID_DOCTYPE = "eu.europa.ec.eudiw.pid.1"
     const val EU_PID_NAMESPACE = "eu.europa.ec.eudiw.pid.1"
-
-    enum class ErikaStaticData(val identifier: String, val value: String) {
-        VISIBLE_NAME("visible_name", "Driving License"),
-    }
-
-    enum class MekbStaticData(val identifier: String, val value: String) {
-        VISIBLE_NAME("visible_name", "Vehicle Registration"),
-    }
-
-    enum class MicovStaticData(val identifier: String, val value: String) {
-        VISIBLE_NAME("visible_name", "Vaccination Document"),
-    }
 }
